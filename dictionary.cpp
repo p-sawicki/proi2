@@ -59,7 +59,7 @@ class Dictionary{
 			return false;
 		}
 		inline bool unusableError() const{
-			std::cout << "ERROR: Dictionary is in unusable state due to memory allocation error. Try restarting the program.\n";
+			std::cout << "ERROR: Dictionary is in an unusable state due to a memory allocation error. Try restarting the program.\n";
 			return false;
 		}
 	public:
