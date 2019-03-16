@@ -10,7 +10,7 @@ class Dictionary{
 		bool usable;
 		TKey* keys;
 		TValue* values;
-		unsigned int findIndex(TKey key) const{
+		unsigned int findIndex(const TKey& key) const{
 			if(!size)
 				return 0;
 			unsigned int difference = size / 4;
