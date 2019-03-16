@@ -45,8 +45,6 @@ class Dictionary{
 		bool allocationError(TKey* keysToDel, TValue* valuesToDel){
 			std::cout << "ERROR: Couldn't allocate memory. Try restarting the program.\n";
 			deleteKeysAndValues(keysToDel, valuesToDel);
-			size = 0;
-			capacity = 0;
 			usable = false;
 			return false;
 		}
@@ -66,8 +64,10 @@ class Dictionary{
 		Dictionary() : size(0), capacity(DEFAULT_CAPACITY), usable(true){
 			keys = new TKey[capacity];
 			values = new TValue[capacity];
-			if(!keys || !values)
+			if(!keys || !values){
 				allocationError(keys, values);
+				capacity = 0;
+			}
 		}
 		~Dictionary(){
 			deleteKeysAndValues(keys, values);
