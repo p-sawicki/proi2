@@ -61,7 +61,7 @@ class Dictionary{
 			return false;
 		}
 	public:
-		Dictionary() : size(0), capacity(DEFAULT_CAPACITY), usable(true){
+		Dictionary(const unsigned int c = DEFAULT_CAPACITY) : size(0), capacity(c), usable(true){
 			keys = new TKey[capacity];
 			values = new TValue[capacity];
 			if(!keys || !values){
@@ -78,7 +78,7 @@ class Dictionary{
 		bool isUsable() const{
 			return usable;
 		}
-		bool increaseCapacity(){
+		bool doubleCapacity(){
 			if(!usable)
 				return unusableError();
 			unsigned int newCapacity = capacity * 2;
@@ -86,7 +86,7 @@ class Dictionary{
 			TValue* newValues = new TValue[newCapacity];
 			if(!keys || !values)
 				return allocationError(newKeys, newValues);
-			for(unsigned int i = 0; i < capacity; ++i){
+			for(unsigned int i = 0; i < size; ++i){
 				newKeys[i] = keys[i];
 				newValues[i] = values[i];
 			}
@@ -101,7 +101,7 @@ class Dictionary{
 			if(!usable)
 				return unusableError();
 			if(size + 1 == capacity)
-				if(!increaseCapacity())
+				if(!doubleCapacity())
 					return false;
 			unsigned int index = findIndex(key);
 			if(key == keys[index])
