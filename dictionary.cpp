@@ -1,5 +1,5 @@
 #include <iostream>
-#define DEFAULT_CAPACITY = 16;
+#define DEFAULT_CAPACITY 16
 /*TKey must implement the '<' '==' and '<<' operators.
   TValue must implement the '==' and '<<' operators. */
 template<class TKey, class TValue>
@@ -10,24 +10,32 @@ class Dictionary{
 		bool usable;
 		TKey* keys;
 		TValue* values;
+		inline unsigned int max(const unsigned int&& a, const unsigned int&& b) const{
+			unsigned int max = a > b ? a : b;
+			return max;	
+		}
 		unsigned int findIndex(const TKey& key) const{
 			if(!size)
 				return 0;
-			unsigned int difference = size / 4;
 			unsigned int position = size / 2;
+			unsigned int difference = (size - position) / 2;
 			while(true){
+				if(key == keys[position])
+					return position;
 				if(key < keys[position]){
 					if(position && key < keys[position - 1]){
 						position -= difference;
-						difference /= 2;
+						difference = max(1, difference / 2);
 					}
+					else if(!position)
+						return 0;
 					else
-						return position;
+						return position - 1;
 				}
 				else{
 					if(position != size - 1 && !(key < keys[position + 1])){
 						position += difference;
-						difference /= 2;
+						difference = max(1, difference / 2);
 					}
 					else
 						return position + 1;
@@ -75,6 +83,9 @@ class Dictionary{
 		unsigned int getSize() const{
 			return size;
 		}
+		unsigned int getCapacity() const{
+			return capacity;
+		}
 		bool isUsable() const{
 			return usable;
 		}
@@ -104,7 +115,7 @@ class Dictionary{
 				if(!doubleCapacity())
 					return false;
 			unsigned int index = findIndex(key);
-			if(key == keys[index])
+			if(size && index < size && key == keys[index])
 				return alreadyExistsError();
 			for(unsigned int i = size; i > index; --i){
 				keys[i] = keys[i - 1];
@@ -119,7 +130,7 @@ class Dictionary{
 			if(!usable)
 				return unusableError();
 			unsigned int index = findIndex(key);
-			if(!size || key != keys[index] || value != values[index])
+			if(!size || index >= size || key != keys[index] || value != values[index])
 				return cantFindError();
 			for(unsigned int i = index; i < size; ++i){
 				keys[i] = keys[i + 1];
@@ -132,16 +143,16 @@ class Dictionary{
 			if(!usable)
 				return unusableError();
 			unsigned int index = findIndex(key);
-			if(!size || key != keys[index])
+			if(!size || index >= size || key != keys[index])
 				return cantFindError();
-			vales[index] = newValue;
+			values[index] = newValue;
 			return true;
 		}
 		bool find(const TKey& key, TValue& foundValue) const{
 			if(!usable)
 				return unusableError();
 			unsigned int index = findIndex(key);
-			if(!size || key != keys[index])
+			if(!size || index >= size || key != keys[index])
 				return cantFindError();
 			foundValue = values[index];
 			return true;
@@ -154,15 +165,13 @@ class Dictionary{
 					return false;
 			return true;
 		}
-		friend istream& operator<<(const std::istream& is, const Dictionary<TKey, TValue>& dict);
+		friend std::ostream& operator<<(std::ostream& os, const Dictionary<TKey, TValue>& dict){
+			if(dict.size)
+				os << "Keys: \t\t\t Values:\n";
+			else
+				os << "Dictionary is empty.\n";
+			for(int i = 0; i < dict.size; ++i)
+				os << dict.keys[i] << "\t\t\t" << dict.values[i] << std::endl;
+			return os;
+		}
 };
-template<class TKey, class TValue>
-istream& operator<<(const std::istream& is, const Dictionary<TKey, TValue>& dict){
-	if(dict.size)
-		is << "Keys: \t\t\t Values:\n";
-	else
-		is << "Dictionary is empty.\n";
-	for(int i = 0; i < dict.size; ++i)
-		is << dict.keys[i] << "\t\t\t" << dict.values[i] << std::endl;
-	return is;
-}
