@@ -10,25 +10,6 @@ class Dictionary{
 		bool usable;
 		TKey* keys;
 		TValue* values;
-		bool increaseCapacity(){
-			if(!usable)
-				return unusableError();
-			unsigned int newCapacity = capacity * 2;
-			TKey* newKeys = new TKey[newCapacity];
-			TValue* newValues = new TValue[newCapacity];
-			if(!keys || !values)
-				return allocationError(newKeys, newValues);
-			for(unsigned int i = 0; i < capacity; ++i){
-				newKeys[i] = keys[i];
-				newValues[i] = values[i];
-			}
-			delete[] keys;
-			delete[] values;
-			capacity = newCapacity;
-			keys = newKeys;
-			values = newValues;
-			return true;
-		}
 		unsigned int findIndex(TKey key) const{
 			if(!size)
 				return 0;
@@ -53,31 +34,31 @@ class Dictionary{
 				}
 			}
 		}
-		void deleteKeysAndValues(TKey* keys, TValue* values){
-			if(keys)
-				delete[] keys;
-			if(values)
-				delete[] values;
+		void deleteKeysAndValues(TKey* keysToDel, TValue* valuesToDel){
+			if(keysToDel)
+				delete[] keysToDel;
+			if(valuesToDel)
+				delete[] valuesToDel;
 			keys = NULL;
 			values = NULL;
 		}
-		bool allocationError(TKey* keys, TValue* values){
+		bool allocationError(TKey* keysToDel, TValue* valuesToDel){
 			std::cout << "ERROR: Couldn't allocate memory. Try restarting the program.\n";
-			deleteKeysAndValues(keys, values);
+			deleteKeysAndValues(keysToDel, valuesToDel);
 			size = 0;
 			capacity = 0;
 			usable = false;
 			return false;
 		}
-		inline bool alreadyExistsError(){
+		inline bool alreadyExistsError() const{
 			std::cout << "The key you are trying to add already exists in the dictionary.\n";
 			return false;
 		}
-		inline bool cantFindError(){
+		inline bool cantFindError() const{
 			std::cout << "The key or key/value pair is not in the dictionary.\n";
 			return false;
 		}
-		inline bool unusableError(){
+		inline bool unusableError() const{
 			std::cout << "ERROR: Dictionary is in unusable state due to memory allocation error. Try restarting the program.\n";
 			return false;
 		}
@@ -88,8 +69,33 @@ class Dictionary{
 			if(!keys || !values)
 				allocationError(keys, values);
 		}
-		bool isUsable(){
+		~Dictionary(){
+			deleteKeysAndValues(keys, values);
+		}
+		unsigned int getSize() const{
+			return size;
+		}
+		bool isUsable() const{
 			return usable;
+		}
+		bool increaseCapacity(){
+			if(!usable)
+				return unusableError();
+			unsigned int newCapacity = capacity * 2;
+			TKey* newKeys = new TKey[newCapacity];
+			TValue* newValues = new TValue[newCapacity];
+			if(!keys || !values)
+				return allocationError(newKeys, newValues);
+			for(unsigned int i = 0; i < capacity; ++i){
+				newKeys[i] = keys[i];
+				newValues[i] = values[i];
+			}
+			delete[] keys;
+			delete[] values;
+			capacity = newCapacity;
+			keys = newKeys;
+			values = newValues;
+			return true;
 		}
 		bool add(const TKey& key, const TValue& value){
 			if(!usable)
@@ -139,9 +145,6 @@ class Dictionary{
 				return cantFindError();
 			foundValue = values[index];
 			return true;
-		}
-		unsigned int getSize() const{
-			return size;
 		}
 		bool operator==(const Dictionary<TKey, TValue>& lhs) const{
 			if(size != lhs.size)
