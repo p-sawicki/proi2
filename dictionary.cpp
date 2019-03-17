@@ -37,8 +37,10 @@ class Dictionary{
 						position += difference;
 						difference = max(1, difference / 2);
 					}
+					else if(position == size - 1)
+						return size;
 					else
-						return position + 1;
+						return position;
 				}
 			}
 		}

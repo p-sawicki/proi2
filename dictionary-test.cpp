@@ -1,60 +1,68 @@
 #include "dictionary-test.h"
 void DictionaryTest::sizeAndCapacityTest(){
-	std::cout << "Testing size and capacity reporting for key: int, value: double\n";
 	Dictionary<int, double> dict;
-	std::cout << "After instantiation: size: " << dict.getSize() << ", capacity: " << dict.getCapacity() << std::endl;	
+	messageSizeCapacity(dict, "Testing size and capacity reporting for key: int, value: double\nBefore: ");
 	for(int i = 0; i < 20; ++i)
 		dict.add(i + 1, (i + 1) * 3.14);
 	assert(dict.getSize() == 20);
 	assert(dict.getCapacity() == 32);
-	std::cout << "After adding 20 elements: size: " << dict.getSize() << ", capacity: " << dict.getCapacity() << std::endl;
+	messageSizeCapacity(dict, "After adding 20 elements: ");
+	std::cout << std::endl;
+}
+void DictionaryTest::sizeAndCapacityTest2(){
+	Dictionary<std::string, Vector> dict;
+	messageSizeCapacity(dict, "Testing size and capacity reporting for key: string, value: vector\nBefore: ");
+	Vector vect(2);
+	vect.setNthValue(0, 5.55);
+	vect.setNthValue(1, 6.66);
+	for(int i = 0; i < 40; ++i)
+		dict.add(std::string(i, 'a'), vect); 
+	assert(dict.getSize() == 40);
+	assert(dict.getCapacity() == 64);
+	messageSizeCapacity(dict, "After adding 40 elements: ");
+	std::cout << std::endl;
 }
 void DictionaryTest::customCapacityTest(){
-	std::cout << "Testing custom capacity expansion for key: int, value: double\n";
 	Dictionary<int, double> dict(10);
-	std::cout << "After instantiation: size: " << dict.getSize() << ", capacity: " << dict.getCapacity() << std::endl;
+	messageSizeCapacity(dict, "Testing custom capacity expansion for key: int, value: double\nBefore: ");
 	for(int i = 0; i < 30; ++i)
 		dict.add(i, i * 1.11);
 	assert(dict.getSize() == 30);
 	assert(dict.getCapacity() == 40);
-	std::cout << "After adding 30 elements: size: " << dict.getSize() << ", capacity: " << dict.getCapacity() << std::endl;
+	messageSizeCapacity(dict, "After adding 30 elements: ");
+	std::cout << std::endl;
 }
 void DictionaryTest::addExistingPairTest(){
-	std::cout << "Testing behavior when trying to add a pair already in the dictionary.\n";
 	Dictionary<int, double> dict;
 	for(int i = 0; i < 3; ++i)
 		dict.add(i + 1, (i + 1) * 6.28);
-	std::cout << "Before: \n" << dict;
-	std::cout << "size: " << dict.getSize() << std::endl << "Adding key: 1 and value: 6.28\n";
+	printSizeCapacity(dict, "Testing behavior when trying to add a key already in the dictionary. Before:\n");
 	dict.add(1, 6.28);
 	assert(dict.getSize() == 3);
-	std::cout << "After: \n" << dict;
-	std::cout << "size: " << dict.getSize() << std::endl;
+	printSizeCapacity(dict, "After adding 1/6.28:\n");
+	std::cout << std::endl;
 }
 void DictionaryTest::removeTest(){
-	std::cout << "Testing removal\n";
 	Dictionary<long long, char> dict;
 	for(char i = 'a'; i < 'd'; ++i)
 		dict.add(i, i);
-	std::cout << "Before: \n" << dict;
-	std::cout << "size: " << dict.getSize() << std::endl << "Removing key: " << (long long)'a' << " and value: 'a'\n";
+	printSizeCapacity(dict, "Testing removal. Before:\n");
 	dict.remove((long long)'a', 'a');
 	assert(dict.getSize() == 2);
-	std::cout << "After: \n" << dict;
-	std::cout << "size: " << dict.getSize() << "\nremoving the same key/value\n";
+	printSizeCapacity(dict, "After removing 97/'a':\n");
+	std::cout << "Removing 97/'a' again\n";
 	dict.remove((long long)'a', 'a');
 	assert(dict.getSize() == 2);
+	std::cout << std::endl;
 }
 void DictionaryTest::changeTest(){
-	std::cout << "Testing changing\n";
 	Dictionary<int, double> dict;
 	for(int i = 0; i < 3; ++i)
 		dict.add(i + 1, (i + 1) * (i + 2));
-	std::cout << "Before: \n" << dict;
-	std::cout << "Changing first element to 3.14.\n";
+	printSizeCapacity(dict, "Testing changing. Before:\n");
 	dict.change(1, 3.14);
-	std::cout << "After: \n" << dict;
-	std::cout << "Trying element with key 4\n";
+	printSizeCapacity(dict, "After changing key: 1 to value: 3.14\n");
+	std::cout << "Trying to change element with key 4\n";
 	bool f = dict.change(4, 3.14);
 	assert(!f);
 	std::cout << "Confirming change happened\n";
@@ -62,7 +70,7 @@ void DictionaryTest::changeTest(){
 	bool b = dict.find(1, confirm);
 	assert(confirm == 3.14);
 	assert(b);
-	std::cout << "Test successful\n";
+	std::cout << "Test successful\n\n";
 }
 void DictionaryTest::comparisonTest(){
 	std::cout << "Testing comparison\n";
@@ -78,5 +86,5 @@ void DictionaryTest::comparisonTest(){
 	std::cout << "Different dictionaries: " << (dict1 == dict2) << std::endl;
 	Dictionary<int, double> dict3;
 	assert(!(dict3 == dict1));
-	std::cout << "Different sizes: " << (dict3 == dict1) << std::endl;
+	std::cout << "Different sizes: " << (dict3 == dict1) << "\n\n";
 }

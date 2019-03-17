@@ -7,4 +7,6 @@ int main(){
 	test.removeTest();
 	test.changeTest();
 	test.comparisonTest();
+	std::cout << std::endl;
+	test.sizeAndCapacityTest2();
 }

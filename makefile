@@ -4,7 +4,7 @@ dictionary-main.o: dictionary-main.cpp dictionary-test.h
 vector.o: vector.h vector.cpp
 	g++ -c vector.cpp -o vector.o -I -Wall
 
-dictionary-test.o: dictionary-test.h dictionary-test.cpp dictionary.cpp
+dictionary-test.o: dictionary-test.h dictionary-test.cpp dictionary.cpp vector.h
 	g++ -c dictionary-test.cpp -o dictionary-test.o -I -Wall
 
 dictionary: dictionary-main.o vector.o dictionary-test.o

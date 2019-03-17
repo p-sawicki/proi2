@@ -6,11 +6,12 @@
 #include <string>
 class Vector{
 	private:
-		const unsigned int DIMENSION;
+		unsigned int dimension;
 		double * data;
 		bool inputFail;
 	public:
 		Vector(const unsigned int& d);
+		Vector();
 		void outOfBoundsError() const; 
 		double getNthValue(const unsigned int& n) const;
 		void setNthValue(const unsigned int& n, const double& newValue);
