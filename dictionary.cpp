@@ -1,3 +1,5 @@
+#ifndef DICTIONARY_CPP
+#define DICTIONARY_CPP
 #include <iostream>
 #define DEFAULT_CAPACITY 16
 /*TKey must implement the '<' '==' and '<<' operators.
@@ -7,7 +9,6 @@ class Dictionary{
 	private:
 		unsigned int size;
 		unsigned int capacity;
-		bool usable;
 		TKey* keys;
 		TValue* values;
 		inline unsigned int max(const unsigned int&& a, const unsigned int&& b) const{
@@ -29,34 +30,24 @@ class Dictionary{
 					}
 					else if(!position)
 						return 0;
-					else
+					else if(key == keys[position - 1])
 						return position - 1;
+					else 
+						return position;
 				}
 				else{
-					if(position != size - 1 && !(key < keys[position + 1])){
+					if(position != size - 1 && key < keys[position + 1])
+						return position + 1;
+					else if(position == size - 1)
+						return size;
+					else if(key == keys[position + 1])
+						return position + 1;
+					else{
 						position += difference;
 						difference = max(1, difference / 2);
 					}
-					else if(position == size - 1)
-						return size;
-					else
-						return position;
 				}
 			}
-		}
-		void deleteKeysAndValues(TKey* keysToDel, TValue* valuesToDel){
-			if(keysToDel)
-				delete[] keysToDel;
-			if(valuesToDel)
-				delete[] valuesToDel;
-			keys = NULL;
-			values = NULL;
-		}
-		bool allocationError(TKey* keysToDel, TValue* valuesToDel){
-			std::cout << "ERROR: Couldn't allocate memory. Try restarting the program.\n";
-			deleteKeysAndValues(keysToDel, valuesToDel);
-			usable = false;
-			return false;
 		}
 		inline bool alreadyExistsError() const{
 			std::cout << "The key you are trying to add already exists in the dictionary.\n";
@@ -66,21 +57,18 @@ class Dictionary{
 			std::cout << "The key or key/value pair is not in the dictionary.\n";
 			return false;
 		}
-		inline bool unusableError() const{
-			std::cout << "ERROR: Dictionary is in an unusable state due to a memory allocation error. Try restarting the program.\n";
-			return false;
-		}
 	public:
-		Dictionary(const unsigned int c = DEFAULT_CAPACITY) : size(0), capacity(c), usable(true){
+		Dictionary(const unsigned int c = DEFAULT_CAPACITY) : size(0), capacity(c){
 			keys = new TKey[capacity];
 			values = new TValue[capacity];
-			if(!keys || !values){
-				allocationError(keys, values);
-				capacity = 0;
-			}
 		}
 		~Dictionary(){
-			deleteKeysAndValues(keys, values);
+			if(keys)
+				delete[] keys;
+			if(values)
+				delete[] values;
+			keys = NULL;
+			values = NULL;
 		}
 		unsigned int getSize() const{
 			return size;
@@ -88,17 +76,10 @@ class Dictionary{
 		unsigned int getCapacity() const{
 			return capacity;
 		}
-		bool isUsable() const{
-			return usable;
-		}
-		bool doubleCapacity(){
-			if(!usable)
-				return unusableError();
+		void doubleCapacity(){
 			unsigned int newCapacity = capacity * 2;
 			TKey* newKeys = new TKey[newCapacity];
 			TValue* newValues = new TValue[newCapacity];
-			if(!keys || !values)
-				return allocationError(newKeys, newValues);
 			for(unsigned int i = 0; i < size; ++i){
 				newKeys[i] = keys[i];
 				newValues[i] = values[i];
@@ -108,14 +89,10 @@ class Dictionary{
 			capacity = newCapacity;
 			keys = newKeys;
 			values = newValues;
-			return true;
 		}
 		bool add(const TKey& key, const TValue& value){
-			if(!usable)
-				return unusableError();
 			if(size + 1 == capacity)
-				if(!doubleCapacity())
-					return false;
+				doubleCapacity();
 			unsigned int index = findIndex(key);
 			if(size && index < size && key == keys[index])
 				return alreadyExistsError();
@@ -129,8 +106,6 @@ class Dictionary{
 			return true;
 		}
 		bool remove(const TKey& key, const TValue& value){
-			if(!usable)
-				return unusableError();
 			unsigned int index = findIndex(key);
 			if(!size || index >= size || key != keys[index] || value != values[index])
 				return cantFindError();
@@ -142,8 +117,6 @@ class Dictionary{
 			return true;
 		}
 		bool change(const TKey& key, const TValue& newValue){
-			if(!usable)
-				return unusableError();
 			unsigned int index = findIndex(key);
 			if(!size || index >= size || key != keys[index])
 				return cantFindError();
@@ -151,8 +124,6 @@ class Dictionary{
 			return true;
 		}
 		bool find(const TKey& key, TValue& foundValue) const{
-			if(!usable)
-				return unusableError();
 			unsigned int index = findIndex(key);
 			if(!size || index >= size || key != keys[index])
 				return cantFindError();
@@ -177,3 +148,4 @@ class Dictionary{
 			return os;
 		}
 };
+#endif

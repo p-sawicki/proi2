@@ -32,6 +32,20 @@ void DictionaryTest::customCapacityTest(){
 	messageSizeCapacity(dict, "After adding 30 elements: ");
 	std::cout << std::endl;
 }
+void DictionaryTest::customCapacityTest2(){
+	Dictionary<std::string, Vector> dict(3);
+	messageSizeCapacity(dict, "Testing custom capacity expansion for key: string, value: vector\nBefore: ");
+	Vector vect(3);
+	for(int i = 0; i < 15; ++i){
+		for(int j = 0; j < 3; ++j)
+			vect.setNthValue(j, i + j);
+		dict.add(std::string(15 - i, 'a'), vect);
+	}
+	assert(dict.getSize() == 15);
+	assert(dict.getCapacity() == 24);
+	messageSizeCapacity(dict, "After adding 15 elements: ");
+	std::cout << std::endl;
+}
 void DictionaryTest::addExistingPairTest(){
 	Dictionary<int, double> dict;
 	for(int i = 0; i < 3; ++i)
@@ -40,6 +54,20 @@ void DictionaryTest::addExistingPairTest(){
 	dict.add(1, 6.28);
 	assert(dict.getSize() == 3);
 	printSizeCapacity(dict, "After adding 1/6.28:\n");
+	std::cout << std::endl;
+}
+void DictionaryTest::addExistingPairTest2(){
+	Dictionary<std::string, Vector> dict;
+	Vector vect(3), vect2(3);
+	for(int i = 0; i < 3; ++i){
+		for(int j = 0; j < 3; ++j)
+			vect.setNthValue(j, i * j);
+		dict.add(std::string(1, 'x' - i), vect);
+	}
+	printSizeCapacity(dict, "Testing behavior when trying to add a key already in the dictionary. Before:\n");
+	dict.add(std::string(1, 'v'), vect2);
+	assert(dict.getSize() == 3);
+	printSizeCapacity(dict, "After adding 'v'/[0, 0, 0]:\n");
 	std::cout << std::endl;
 }
 void DictionaryTest::removeTest(){
@@ -52,6 +80,23 @@ void DictionaryTest::removeTest(){
 	printSizeCapacity(dict, "After removing 97/'a':\n");
 	std::cout << "Removing 97/'a' again\n";
 	dict.remove((long long)'a', 'a');
+	assert(dict.getSize() == 2);
+	std::cout << std::endl;
+}
+void DictionaryTest::removeTest2(){
+	Dictionary<std::string, Vector> dict;
+	Vector vect(3);
+	for(int i = 0; i < 3; ++i){
+		for(int j = 0; j < 3; ++j)
+			vect.setNthValue(j, i);
+		dict.add(std::string(1, 'a' + i), vect);
+	}
+	printSizeCapacity(dict, "Testing removal. Before:\n");
+	dict.remove(std::string(1, 'c'), vect);
+	assert(dict.getSize() == 2);
+	printSizeCapacity(dict, "After removing 'c'/[2,2,2]:\n");
+	std::cout << "Removing 'b'/[2,2,2]\n";
+	dict.remove(std::string(1, 'b'), vect);
 	assert(dict.getSize() == 2);
 	std::cout << std::endl;
 }
@@ -72,6 +117,24 @@ void DictionaryTest::changeTest(){
 	assert(b);
 	std::cout << "Test successful\n\n";
 }
+void DictionaryTest::changeTest2(){
+	Dictionary<std::string, Vector> dict;
+	Vector vect(3);
+	for(int i = 0; i < 3; ++i){
+		for(int j = 0; j < 3; ++j)
+			vect.setNthValue(j, i + j);
+		dict.add(std::string(1, 'n' - i), vect);
+	}
+	printSizeCapacity(dict, "Testing changing. Before:\n");
+	for(int i = 0; i < 3; ++i)
+		vect.setNthValue(i, 2 * (i + 1));
+	dict.change(std::string(1, 'm'), vect);
+	printSizeCapacity(dict, "After changing key: 'm' to value: [2,4,6]\n");
+	Vector vect2(3);
+	assert(dict.find(std::string(1, 'm'), vect2));
+	assert(vect2 == vect);
+	std::cout << "Change successful\n\n";
+}
 void DictionaryTest::comparisonTest(){
 	std::cout << "Testing comparison\n";
 	Dictionary<int, double> dict1, dict2;
@@ -87,4 +150,19 @@ void DictionaryTest::comparisonTest(){
 	Dictionary<int, double> dict3;
 	assert(!(dict3 == dict1));
 	std::cout << "Different sizes: " << (dict3 == dict1) << "\n\n";
+}
+void DictionaryTest::comparisonTest2(){
+	std::cout << "Testing comparison with string/vector\n";
+	Dictionary<std::string, Vector> dict1, dict2;
+	Vector vect(3);
+	for(int i = 0; i < 3; ++i){
+		dict1.add(std::string(1, 'a' + i), vect);
+		dict2.add(std::string(1, 'a' + i), vect);
+	}
+	assert(dict1 == dict2);
+	std::cout << "Equal dictionaries: " << std::boolalpha << (dict1 == dict2) << std::endl;
+	vect.setNthValue(1, 2);
+	dict2.change(std::string(1, 'b'), vect);
+	assert(!(dict1 == dict2));
+	std::cout << "Different dictionaries: " << (dict1 == dict2) << "\n\n";
 }

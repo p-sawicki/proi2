@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cassert>
 #include <string>
+#include <limits.h>
 #include "dictionary.cpp"
 #include "vector.h"
 class DictionaryTest{

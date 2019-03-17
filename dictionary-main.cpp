@@ -9,4 +9,9 @@ int main(){
 	test.comparisonTest();
 	std::cout << std::endl;
 	test.sizeAndCapacityTest2();
+	test.customCapacityTest2();
+	test.addExistingPairTest2();
+	test.removeTest2();
+	test.changeTest2();
+	test.comparisonTest2();
 }
