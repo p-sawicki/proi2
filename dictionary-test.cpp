@@ -1,3 +1,4 @@
+/*Author: Piotr Sawicki*/
 #include "dictionary-test.h"
 void DictionaryTest::sizeAndCapacityTest(){
 	Dictionary<int, double> dict;

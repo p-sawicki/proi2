@@ -1,3 +1,4 @@
+/*Author: Piotr Sawicki*/
 #ifndef DICTIONARY_TEST_H
 #define DICTIONARY_TEST_H
 #include <iostream>

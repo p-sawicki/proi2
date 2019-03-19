@@ -1,3 +1,4 @@
+/*Author: Piotr Sawicki*/
 #ifndef DICTIONARY_CPP
 #define DICTIONARY_CPP
 #include <iostream>

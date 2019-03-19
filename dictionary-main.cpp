@@ -1,3 +1,4 @@
+/*Author: Piotr Sawicki*/
 #include "dictionary-test.h"
 int main(){
 	DictionaryTest test;
