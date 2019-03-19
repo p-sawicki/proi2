@@ -166,3 +166,23 @@ void DictionaryTest::comparisonTest2(){
 	assert(!(dict1 == dict2));
 	std::cout << "Different dictionaries: " << (dict1 == dict2) << "\n\n";
 }
+void DictionaryTest::sortTest(){
+	std::cout << "Testing sorting with int/double\n";
+	Dictionary<int, double> dict;
+	dict.add(5, 5.5);
+	dict.add(3, 3.3);
+	dict.add(4, 8);
+	dict.add(10, 15);
+	dict.add(1, 8);
+	dict.add(6, 9.9);
+	dict.add(-42, 0);
+	dict.remove(4, 8);
+	dict.remove(1, 8);
+	dict.add(-13, 18);
+	dict.add(2, 3);
+	dict.add(1, 9);
+	printSizeCapacity(dict, "Added keys: 5, 3, 4, 10, 1, 6, -42. Removed: 4, 1. Added: -13, 2, 1. Result:\n");
+	double confirm = 0;
+	dict.find(10, confirm);
+	assert(confirm == 15);
+}

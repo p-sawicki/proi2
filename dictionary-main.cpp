@@ -14,4 +14,6 @@ int main(){
 	test.removeTest2();
 	test.changeTest2();
 	test.comparisonTest2();
+	std::cout << std::endl;
+	test.sortTest();
 }

@@ -30,5 +30,6 @@ class DictionaryTest{
 		void changeTest2();
 		void comparisonTest();
 		void comparisonTest2();
+		void sortTest();
 };
 #endif

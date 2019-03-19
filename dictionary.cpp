@@ -3,7 +3,8 @@
 #include <iostream>
 #define DEFAULT_CAPACITY 16
 /*TKey must implement the '<' '==' and '<<' operators.
-  TValue must implement the '==' and '<<' operators. */
+  TValue must implement the '==' and '<<' operators.
+  Both TKey and TValue must have parameterless constructors. */
 template<class TKey, class TValue>
 class Dictionary{
 	private:
@@ -12,8 +13,8 @@ class Dictionary{
 		TKey* keys;
 		TValue* values;
 		inline unsigned int max(const unsigned int&& a, const unsigned int&& b) const{
-			unsigned int max = a > b ? a : b;
-			return max;	
+			unsigned int result = a > b ? a : b;
+			return result;	
 		}
 		unsigned int findIndex(const TKey& key) const{
 			if(!size)
