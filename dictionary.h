@@ -2,7 +2,6 @@
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 #include <iostream>
-#define DEFAULT_CAPACITY 16
 /*TKey must implement the '<' '==' and '<<' operators.
   TValue must implement the '==' and '<<' operators.
   Both TKey and TValue must have parameterless constructors. */
@@ -74,18 +73,18 @@ class Dictionary{
 			ListNode* spot = findNode(key);
 			if(!spot || spot->key != key || spot->value != value)
 				return cantFindError();
-			if(spot == head && head->key == key){
-				ListNode* next = head->next;
-				delete head;
-				head = next;
-				--size;	
-				return true;
+			ListNode* next = NULL;
+			if(spot != head){
+				ListNode* prev = head;
+				while(prev && prev->next && prev->next != spot)
+					prev = prev->next;
+				prev->next = spot->next;
 			}
-			ListNode* prev = head;
-			while(prev && prev->next && prev->next != spot)
-				prev = prev->next;
-			prev->next = spot->next;
+			else
+				next = head->next;
 			delete spot;
+			if(next)
+				head = next;
 			--size;
 			return true;
 		}
