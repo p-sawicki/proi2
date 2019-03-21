@@ -42,7 +42,8 @@ class Dictionary{
 				delete head;
 				head = next;
 			}
-			delete head;
+			if(head)
+				delete head;
 		}
 		unsigned int getSize() const{
 			return size;
