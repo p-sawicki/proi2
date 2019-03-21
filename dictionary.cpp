@@ -9,11 +9,14 @@
 template<class TKey, class TValue>
 class Dictionary{
 	private:
+		struct ListNode{
+			TKey key;
+			TValue value;
+			ListNode* next;
+		};
 		unsigned int size;
-		unsigned int capacity;
-		TKey* keys;
-		TValue* values;
-		inline unsigned int max(const unsigned int&& a, const unsigned int&& b) const{
+		ListNode* head;
+		/*inline unsigned int max(const unsigned int&& a, const unsigned int&& b) const{
 			unsigned int result = a > b ? a : b;
 			return result;	
 		}
@@ -50,6 +53,17 @@ class Dictionary{
 					}
 				}
 			}
+		}*/
+		ListNode* findNode(const TKey& key) const{
+			ListNode* result = head;
+			if(!size)
+				return NULL;
+			while(result->next && result->next->key < key)
+				result = result->next;
+			if(result->next && result->next->key == key)
+				return result->next;
+			else
+				return result;
 		}
 		inline bool alreadyExistsError() const{
 			std::cout << "The key you are trying to add already exists in the dictionary.\n";
@@ -60,25 +74,21 @@ class Dictionary{
 			return false;
 		}
 	public:
-		Dictionary(const unsigned int c = DEFAULT_CAPACITY) : size(0), capacity(c){
-			keys = new TKey[capacity];
-			values = new TValue[capacity];
-		}
+		Dictionary() : size(0), head(NULL) {}
 		~Dictionary(){
-			if(keys)
-				delete[] keys;
-			if(values)
-				delete[] values;
-			keys = NULL;
-			values = NULL;
+			while(head->next){
+				ListNode* next = head->next;
+				delete head;
+				head = next;
+			}
 		}
 		unsigned int getSize() const{
 			return size;
 		}
-		unsigned int getCapacity() const{
+		/*unsigned int getCapacity() const{
 			return capacity;
-		}
-		void doubleCapacity(){
+		}*/
+		/*void doubleCapacity(){
 			unsigned int newCapacity = capacity * 2;
 			TKey* newKeys = new TKey[newCapacity];
 			TValue* newValues = new TValue[newCapacity];
@@ -91,53 +101,93 @@ class Dictionary{
 			capacity = newCapacity;
 			keys = newKeys;
 			values = newValues;
-		}
+		}*/
 		bool add(const TKey& key, const TValue& value){
-			if(size + 1 == capacity)
+			/*if(size + 1 == capacity)
 				doubleCapacity();
-			unsigned int index = findIndex(key);
-			if(size && index < size && key == keys[index])
+			unsigned int index = findIndex(key);*/
+			/*if(size && index < size && key == keys[index])*/
+			ListNode* spot = findNode(key);
+			if(spot && spot->key == key)
 				return alreadyExistsError();
-			for(unsigned int i = size; i > index; --i){
+			/*for(unsigned int i = size; i > index; --i){
 				keys[i] = keys[i - 1];
 				values[i] = values[i - 1];
 			}
 			keys[index] = key;
-			values[index] = value;
+			values[index] = value;*/
+			ListNode* newNode = new ListNode;
+			newNode->key = key;
+			newNode->value = value;
+			if(spot){
+				ListNode* next = spot->next;
+				spot->next = newNode;
+				spot->next->next = next;
+			}
+			else{
+				head = newNode;
+				head->next = NULL;
+			}
 			++size;
 			return true;
 		}
 		bool remove(const TKey& key, const TValue& value){
-			unsigned int index = findIndex(key);
-			if(!size || index >= size || key != keys[index] || value != values[index])
+			/*unsigned int index = findIndex(key);
+			if(!size || index >= size || key != keys[index] || value != values[index])*/
+			ListNode* spot = findNode(key);
+			if(!spot || spot->key != key || spot->value != value)
 				return cantFindError();
-			for(unsigned int i = index; i < size; ++i){
+			/*for(unsigned int i = index; i < size; ++i){
 				keys[i] = keys[i + 1];
 				values[i] = values[i + 1];
+			}*/
+			if(spot == head && head->key == key){
+				ListNode* next = head->next;
+				delete head;
+				head = next;
+				--size;	
+				return true;
 			}
+			ListNode* prev = head;
+			while(prev && prev->next && prev->next != spot)
+				prev = prev->next;
+			prev->next = spot->next;
+			delete spot;
 			--size;
 			return true;
 		}
 		bool change(const TKey& key, const TValue& newValue){
-			unsigned int index = findIndex(key);
-			if(!size || index >= size || key != keys[index])
+			/*unsigned int index = findIndex(key);
+			if(!size || index >= size || key != keys[index])*/
+			ListNode* spot = findNode(key);
+			if(!spot || spot->key != key)
 				return cantFindError();
-			values[index] = newValue;
+			spot->value = newValue;
 			return true;
 		}
 		bool find(const TKey& key, TValue& foundValue) const{
-			unsigned int index = findIndex(key);
-			if(!size || index >= size || key != keys[index])
+			/*unsigned int index = findIndex(key);
+			if(!size || index >= size || key != keys[index])*/
+			ListNode* spot = findNode(key);
+			if(!spot || spot->key != key)
 				return cantFindError();
-			foundValue = values[index];
+			foundValue = spot->value;
 			return true;
 		}
 		bool operator==(const Dictionary<TKey, TValue>& lhs) const{
 			if(size != lhs.size)
 				return false;
-			for(unsigned int i = 0; i < size; ++i)
+			/*for(unsigned int i = 0; i < size; ++i)
 				if(!(keys[i] == lhs.keys[i] && values[i] == lhs.values[i]))
+					return false;*/
+			ListNode* nodeRight = head;
+			ListNode* nodeLeft = lhs.head;
+			while(nodeRight && nodeLeft){
+				if(nodeRight->key != nodeLeft->key || nodeRight->value != nodeLeft->value)
 					return false;
+				nodeRight = nodeRight->next;
+				nodeLeft = nodeLeft->next;
+			}
 			return true;
 		}
 		friend std::ostream& operator<<(std::ostream& os, const Dictionary<TKey, TValue>& dict){
@@ -145,8 +195,11 @@ class Dictionary{
 				os << "Keys: \t\t\t Values:\n";
 			else
 				os << "Dictionary is empty.\n";
-			for(int i = 0; i < dict.size; ++i)
-				os << dict.keys[i] << "\t\t\t" << dict.values[i] << std::endl;
+			ListNode* node = dict.head;
+			while(node){
+				os << node->key << "\t\t\t" << node->value << std::endl;
+				node = node->next;
+			}
 			return os;
 		}
 };

@@ -11,7 +11,7 @@ class DictionaryTest{
 	private:
 		template<class TKey, class TValue>
 		inline void messageSizeCapacity(Dictionary<TKey, TValue>& dict, const char* message){
-			std::cout << message << "size: " << dict.getSize() << ", capacity: " << dict.getCapacity() << std::endl;
+			std::cout << message << "size: " << dict.getSize() << std::endl;
 		}
 		template<class TKey, class TValue>
 		inline void printSizeCapacity(Dictionary<TKey, TValue>& dict, const char* message){
@@ -32,5 +32,6 @@ class DictionaryTest{
 		void comparisonTest();
 		void comparisonTest2();
 		void sortTest();
+		void emptyTest();
 };
 #endif

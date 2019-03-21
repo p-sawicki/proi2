@@ -2,28 +2,26 @@
 #include "dictionary-test.h"
 void DictionaryTest::sizeAndCapacityTest(){
 	Dictionary<int, double> dict;
-	messageSizeCapacity(dict, "Testing size and capacity reporting for key: int, value: double\nBefore: ");
+	messageSizeCapacity(dict, "Testing size reporting for key: int, value: double\nBefore: ");
 	for(int i = 0; i < 20; ++i)
 		dict.add(i + 1, (i + 1) * 3.14);
 	assert(dict.getSize() == 20);
-	assert(dict.getCapacity() == 32);
 	messageSizeCapacity(dict, "After adding 20 elements: ");
 	std::cout << std::endl;
 }
 void DictionaryTest::sizeAndCapacityTest2(){
 	Dictionary<std::string, Vector> dict;
-	messageSizeCapacity(dict, "Testing size and capacity reporting for key: string, value: vector\nBefore: ");
+	messageSizeCapacity(dict, "Testing size reporting for key: string, value: vector\nBefore: ");
 	Vector vect(2);
 	vect.setNthValue(0, 5.55);
 	vect.setNthValue(1, 6.66);
 	for(int i = 0; i < 40; ++i)
 		dict.add(std::string(i, 'a'), vect); 
 	assert(dict.getSize() == 40);
-	assert(dict.getCapacity() == 64);
 	messageSizeCapacity(dict, "After adding 40 elements: ");
 	std::cout << std::endl;
 }
-void DictionaryTest::customCapacityTest(){
+/*void DictionaryTest::customCapacityTest(){
 	Dictionary<int, double> dict(10);
 	messageSizeCapacity(dict, "Testing custom capacity expansion for key: int, value: double\nBefore: ");
 	for(int i = 0; i < 30; ++i)
@@ -46,7 +44,7 @@ void DictionaryTest::customCapacityTest2(){
 	assert(dict.getCapacity() == 24);
 	messageSizeCapacity(dict, "After adding 15 elements: ");
 	std::cout << std::endl;
-}
+}*/
 void DictionaryTest::addExistingPairTest(){
 	Dictionary<int, double> dict;
 	for(int i = 0; i < 3; ++i)
@@ -151,7 +149,7 @@ void DictionaryTest::comparisonTest(){
 	Dictionary<int, double> dict3;
 	assert(!(dict3 == dict1));
 	std::cout << "Different sizes: " << (dict3 == dict1) << "\n\n";
-}
+}	
 void DictionaryTest::comparisonTest2(){
 	std::cout << "Testing comparison with string/vector\n";
 	Dictionary<std::string, Vector> dict1, dict2;
@@ -186,4 +184,11 @@ void DictionaryTest::sortTest(){
 	double confirm = 0;
 	dict.find(10, confirm);
 	assert(confirm == 15);
+}
+void DictionaryTest::emptyTest(){
+	std::cout << "Testing behavior when removing a value from an empty dictionary.\n";
+	Dictionary<std::string, Vector> dict;
+	bool ifSuccess = dict.remove(std::string(1, 'a'), Vector(1));
+	assert(!ifSuccess);
+	std::cout << std::endl;
 }
