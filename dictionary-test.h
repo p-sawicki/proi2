@@ -5,18 +5,18 @@
 #include <cassert>
 #include <string>
 #include <limits.h>
-#include "dictionary.cpp"
+#include "dictionary.h"
 #include "vector.h"
 class DictionaryTest{
 	private:
 		template<class TKey, class TValue>
-		inline void messageSizeCapacity(Dictionary<TKey, TValue>& dict, const char* message){
+		inline void messageSize(Dictionary<TKey, TValue>& dict, const char* message){
 			std::cout << message << "size: " << dict.getSize() << std::endl;
 		}
 		template<class TKey, class TValue>
-		inline void printSizeCapacity(Dictionary<TKey, TValue>& dict, const char* message){
+		inline void printSize(Dictionary<TKey, TValue>& dict, const char* message){
 			std::cout << message << dict;
-			messageSizeCapacity(dict, "");
+			messageSize(dict, "");
 		}
 	public:
 		void sizeAndCapacityTest();
