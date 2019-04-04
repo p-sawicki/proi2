@@ -70,7 +70,7 @@ void DictionaryTest::removeTest2(){
 	dict.remove(std::string(1, 'c'), vect);
 	assert(dict.getSize() == 2);
 	printSize(dict, "After removing 'c'/[2,2,2]:\n");
-	std::cout << "Removing 'b'/[2,2,2]\n";
+	std::cout << "Removing 'b'/[2,2,2]:\n";
 	dict.remove(std::string(1, 'b'), vect);
 	assert(dict.getSize() == 2);
 	std::cout << std::endl;
