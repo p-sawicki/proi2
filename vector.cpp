@@ -39,10 +39,11 @@ bool Vector::getInputFail() const {
 Vector& Vector::operator=(const Vector& second){
 	if(*this == second)
 		return *this;
-	if(data)
+	if(!isSameDimension(second)){
 		delete[] data;
-	dimension = second.dimension;
-	data = new double[dimension];
+		dimension = second.dimension;
+		data = new double[dimension];
+	}
 	for(unsigned int i = 0; i < dimension; ++i)
 		data[i] = second.data[i];
 	return *this;
