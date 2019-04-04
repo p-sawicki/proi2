@@ -15,6 +15,7 @@ class Dictionary{
 		};
 		unsigned int size;
 		ListNode* head;
+		/*Returns greatest key not greater than given key or NULL if no such exists*/
 		ListNode* findNode(const TKey& key) const{
 			ListNode* result = head;
 			if(!size || key < head->key)
