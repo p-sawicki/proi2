@@ -2,7 +2,7 @@
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 #include <iostream>
-/*TKey must implement the '<' '==' and '<<' operators.
+/*TKey must implement the '<', '==' and '<<' operators.
   TValue must implement the '==' and '<<' operators.
   Both TKey and TValue must have parameterless constructors. */
 template<class TKey, class TValue>
