@@ -1,4 +1,4 @@
-/*Author: Piotr Sawicki*/
+/*Author: Piotr Sawicki */
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 #include <iostream>
